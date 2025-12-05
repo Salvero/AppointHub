@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - AppointHub{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Welcome, {{ user.get_short_name }}!</h1>
+    <p class="text-gray-600 mt-2">Manage your appointments and services from here.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Quick Stats Cards -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-gray-500 text-sm font-medium">Today's Appointments</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">0</div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-gray-500 text-sm font-medium">Upcoming Bookings</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">0</div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-gray-500 text-sm font-medium">Total Customers</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">0</div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-gray-500 text-sm font-medium">This Month's Revenue</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">$0</div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="mt-8">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-6 text-center text-gray-500">
+            No recent activity to show.
+        </div>
+    </div>
+</div>
+{% endblock %}

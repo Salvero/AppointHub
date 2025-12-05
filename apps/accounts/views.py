@@ -1,0 +1,189 @@
+import secrets
+from datetime import timedelta
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+
+from .forms import (
+    LoginForm,
+    PasswordResetForm,
+    PasswordResetRequestForm,
+    ProfileForm,
+    RegistrationForm,
+)
+from .models import EmailVerificationToken, PasswordResetToken, User
+from apps.notifications.services import email_service
+
+
+def register_view(request):
+    """Handle user registration."""
+    if request.user.is_authenticated:
+        return redirect('dashboard:index')
+
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+
+            # Create verification token
+            token = secrets.token_urlsafe(32)
+            EmailVerificationToken.objects.create(
+                user=user,
+                token=token,
+                expires_at=timezone.now() + timedelta(hours=24),
+            )
+
+            # Send verification email via Resend
+            email_service.send_verification_email(user, token, request)
+
+            messages.success(
+                request,
+                'Registration successful! Please check your email to verify your account.'
+            )
+            return redirect('accounts:login')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'accounts/register.html', {'form': form})
+
+
+def login_view(request):
+    """Handle user login."""
+    if request.user.is_authenticated:
+        return redirect('dashboard:index')
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.get_short_name()}!')
+
+            # Redirect to next page if specified
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            return redirect('dashboard:index')
+    else:
+        form = LoginForm()
+
+    return render(request, 'accounts/login.html', {'form': form})
+
+
+@login_required
+def logout_view(request):
+    """Handle user logout."""
+    logout(request)
+    messages.info(request, 'You have been logged out.')
+    return redirect('accounts:login')
+
+
+def verify_email_view(request, token):
+    """Handle email verification."""
+    verification_token = get_object_or_404(
+        EmailVerificationToken,
+        token=token,
+        is_used=False,
+    )
+
+    if verification_token.is_expired:
+        messages.error(request, 'This verification link has expired.')
+        return redirect('accounts:login')
+
+    # Activate user
+    user = verification_token.user
+    user.is_active = True
+    user.is_email_verified = True
+    user.save()
+
+    # Mark token as used
+    verification_token.is_used = True
+    verification_token.save()
+
+    messages.success(request, 'Email verified successfully! You can now log in.')
+    return redirect('accounts:login')
+
+
+def password_reset_request_view(request):
+    """Handle password reset request."""
+    if request.user.is_authenticated:
+        return redirect('dashboard:index')
+
+    if request.method == 'POST':
+        form = PasswordResetRequestForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+
+            try:
+                user = User.objects.get(email=email)
+
+                # Create reset token
+                token = secrets.token_urlsafe(32)
+                PasswordResetToken.objects.create(
+                    user=user,
+                    token=token,
+                    expires_at=timezone.now() + timedelta(hours=1),
+                )
+
+                # Send reset email via Resend
+                email_service.send_password_reset_email(user, token, request)
+            except User.DoesNotExist:
+                pass  # Don't reveal whether email exists
+
+            messages.info(
+                request,
+                'If an account exists with this email, you will receive a password reset link.'
+            )
+            return redirect('accounts:login')
+    else:
+        form = PasswordResetRequestForm()
+
+    return render(request, 'accounts/password_reset_request.html', {'form': form})
+
+
+def password_reset_confirm_view(request, token):
+    """Handle password reset confirmation."""
+    reset_token = get_object_or_404(
+        PasswordResetToken,
+        token=token,
+        is_used=False,
+    )
+
+    if reset_token.is_expired:
+        messages.error(request, 'This password reset link has expired.')
+        return redirect('accounts:password_reset_request')
+
+    if request.method == 'POST':
+        form = PasswordResetForm(reset_token.user, request.POST)
+        if form.is_valid():
+            form.save()
+
+            # Mark token as used
+            reset_token.is_used = True
+            reset_token.save()
+
+            messages.success(request, 'Password reset successful! You can now log in.')
+            return redirect('accounts:login')
+    else:
+        form = PasswordResetForm(reset_token.user)
+
+    return render(request, 'accounts/password_reset_confirm.html', {'form': form})
+
+
+@login_required
+def profile_view(request):
+    """Display and update user profile."""
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'accounts/profile.html', {'form': form})
