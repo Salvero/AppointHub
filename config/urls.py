@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.accounts.views import landing_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('apps.accounts.urls')),
@@ -14,7 +16,7 @@ urlpatterns = [
     path('staff/', include('apps.staff.urls')),
     path('bookings/', include('apps.bookings.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
-    path('', include(('apps.dashboard.urls', 'home'), namespace='home')),  # Root URL
+    path('', landing_view, name='landing'),
 ]
 
 if settings.DEBUG:
