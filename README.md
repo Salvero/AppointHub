@@ -31,45 +31,61 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 ## ✨ Features
 
+### 🏠 Landing Page
+- Modern, responsive hero section with gradient backgrounds
+- Interactive dashboard preview with animated charts
+- Feature showcase with hover effects
+- Pricing plans (Free, Pro, Enterprise)
+- "How It Works" step-by-step guide
+- Professional footer with social links
+
 ### 📊 Dashboard & Analytics
 - Real-time business metrics and KPIs
-- Revenue tracking with interactive charts
-- Weekly appointment activity visualization
+- Revenue tracking with interactive line charts
+- Weekly appointment activity visualization (bar chart)
 - Popular services distribution (doughnut chart)
 - Today's schedule at a glance
-- Recent activity feed
+- Recent activity feed with live updates
+- Month-to-month navigation
 
 ### 📅 Appointment Management
 - Full CRUD operations for appointments
-- Status tracking (Pending, Confirmed, Completed, Cancelled)
-- Advanced filtering and search
+- Status tracking (Pending, Confirmed, Completed, Cancelled, No-Show)
+- Advanced filtering by date, status, staff, and service
+- Real-time search functionality
 - Date and time slot management
 - Customer and staff assignment
+- Appointment notes and history
 
 ### 💼 Service Management
 - Service catalog with categories
 - Pricing and duration configuration
-- Active/Inactive toggle
+- Active/Inactive status toggle
 - Booking statistics per service
+- Service color coding
+- Category organization
 
 ### 👥 Staff Management
 - Staff profiles with contact information
 - Availability status (Available, Busy, Off)
-- Service assignments
+- Service assignments and specializations
 - Performance ratings and reviews
 - Weekly appointment tracking
+- Working hours configuration
 
 ### 👤 Customer Management
-- Customer database with profiles
+- Customer database with detailed profiles
 - VIP/Regular/New customer segmentation
 - Visit history and spending tracking
 - Contact information management
+- Customer notes and preferences
+- Total visits and lifetime value tracking
 
 ### ⚙️ Settings & Preferences
 - Notification preferences (Email, SMS, Reminders)
 - Privacy controls
-- Password management
-- Theme customization (coming soon)
+- Password management with secure reset
+- Profile customization
 - Account management
 
 ### 🔐 Authentication & Security
@@ -77,7 +93,8 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 - Email verification system
 - Password reset with token-based links
 - Session management
-- Role-based access control
+- CSRF protection
+- Clean, modern auth UI
 
 ---
 
@@ -85,37 +102,46 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 <div align="center">
 
-### Dashboard
+### 🏠 Homepage
+![Homepage](docs/screenshots/Homepage-1.png)
+*Beautiful landing page with hero section, features, and pricing*
+
+![Homepage Details](docs/screenshots/Homepage-details.png)
+*Feature highlights and "How It Works" section*
+
+![Homepage Dashboard Preview](docs/screenshots/Homepage-dashboard-2.png)
+*Interactive dashboard preview with animated charts*
+
+### 📊 Dashboard
 ![Dashboard](docs/screenshots/Dashboard-1.png)
-*Comprehensive overview with charts, metrics, and quick actions*
+*Comprehensive overview with revenue charts, metrics, and quick actions*
 
-### Dashboard - Bottom Section
 ![Dashboard Bottom](docs/screenshots/Dashboard-2.png)
-*Weekly activity, today's schedule, and recent activity feed*
+*Weekly activity chart, today's schedule, and recent activity feed*
 
-### Appointments
-![Appointments](docs/screenshots/Appointment-page.png)
-*Manage and track all bookings with filtering and search*
+### 📅 Appointments
+![Appointments](docs/screenshots/Appointments-page.png)
+*Manage and track all bookings with advanced filtering and search*
 
-### Services
+### 💼 Services
 ![Services](docs/screenshots/Services-page.png)
-*Service catalog with categories and pricing*
+*Service catalog with categories, pricing, and duration*
 
-### Staff Management
+### 👥 Staff Management
 ![Staff](docs/screenshots/Staff-page.png)
-*Team overview with availability and performance metrics*
+*Team overview with availability status and performance metrics*
 
-### Settings
+### 👤 Customers
+![Customers](docs/screenshots/Customers.png)
+*Customer database with segmentation and visit history*
+
+### ⚙️ Settings
 ![Settings](docs/screenshots/User-setting.png)
-*User preferences and account management*
+*User preferences, notifications, and account management*
 
-### Shop Setup
-![Shop Setup](docs/screenshots/Shop-Setup-1.png)
-*Business configuration and contact information*
-
-### Login
+### 🔐 Authentication
 ![Login](docs/screenshots/Login-page.png)
-*Secure authentication with modern UI*
+*Secure authentication with modern, clean UI*
 
 </div>
 
@@ -225,17 +251,19 @@ AppointHub/
 ### Color Palette
 | Color | Hex | Usage |
 |-------|-----|-------|
-| Dark Navy | `#1a1a2e` | Primary background |
-| Deep Blue | `#16213e` | Secondary background |
-| Ocean Blue | `#0f3460` | Accents |
-| Royal Purple | `#533483` | Primary brand |
-| Coral Rose | `#e94560` | Accent/CTA |
+| Indigo | `#667eea` | Primary brand color |
+| Purple | `#764ba2` | Secondary brand color |
+| White | `#ffffff` | Backgrounds |
+| Gray 50 | `#f9fafb` | Page backgrounds |
+| Gray 800 | `#1f2937` | Text |
 
 ### UI Components
-- **Glass Morphism** - Frosted glass effect cards
-- **Gradient Buttons** - Purple to rose gradient CTAs
-- **Animated Backgrounds** - Floating particles, blobs, aurora effects
+- **Clean White Design** - Modern, minimalist white backgrounds
+- **Gradient Buttons** - Indigo to purple gradient CTAs
+- **Animated Charts** - Growing bars and smooth transitions
+- **Hover Effects** - Subtle scale and shadow on cards
 - **Responsive Grid** - Mobile-first layout system
+- **Inter Font** - Clean, modern typography
 
 ---
 

@@ -296,8 +296,8 @@
     // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 250);
-    revenueGradient.addColorStop(0, 'rgba(83, 52, 131, 0.3)');
-    revenueGradient.addColorStop(1, 'rgba(83, 52, 131, 0)');
+    revenueGradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+    revenueGradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
     
     new Chart(revenueCtx, {
         type: 'line',
@@ -306,11 +306,11 @@
             datasets: [{
                 label: 'Revenue',
                 data: {{ revenue_data|safe }},
-                borderColor: '#533483',
+                borderColor: '#667eea',
                 backgroundColor: revenueGradient,
                 fill: true,
                 tension: 0.4,
-                pointBackgroundColor: '#533483',
+                pointBackgroundColor: '#667eea',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 5,
@@ -318,11 +318,11 @@
             }, {
                 label: 'Bookings',
                 data: {{ bookings_data|safe }},
-                borderColor: '#e94560',
+                borderColor: '#764ba2',
                 backgroundColor: 'transparent',
                 borderDash: [5, 5],
                 tension: 0.4,
-                pointBackgroundColor: '#e94560',
+                pointBackgroundColor: '#764ba2',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 2,
                 pointRadius: 4,
@@ -429,8 +429,8 @@
     // Weekly Appointments Bar Chart
     const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
     const weeklyGradient = weeklyCtx.createLinearGradient(0, 0, 0, 200);
-    weeklyGradient.addColorStop(0, '#e94560');
-    weeklyGradient.addColorStop(1, '#533483');
+    weeklyGradient.addColorStop(0, '#667eea');
+    weeklyGradient.addColorStop(1, '#764ba2');
     
     new Chart(weeklyCtx, {
         type: 'bar',
