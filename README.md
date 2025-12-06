@@ -1,4 +1,4 @@
-# AppointHub
+# 📅 AppointHub
 
 <div align="center">
 
@@ -15,7 +15,7 @@
 
 ---
 
-## Overview
+## 🎯 Overview
 
 AppointHub is a comprehensive appointment scheduling and business management solution designed for service-based businesses like salons, spas, clinics, and consulting firms. Built with scalability and user experience in mind, it provides an intuitive interface for managing appointments, staff, services, and customer relationships.
 
@@ -29,9 +29,9 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 ---
 
-## Features
+## ✨ Features
 
-### Dashboard & Analytics
+### 📊 Dashboard & Analytics
 - Real-time business metrics and KPIs
 - Revenue tracking with interactive charts
 - Weekly appointment activity visualization
@@ -39,40 +39,40 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 - Today's schedule at a glance
 - Recent activity feed
 
-### Appointment Management
+### 📅 Appointment Management
 - Full CRUD operations for appointments
 - Status tracking (Pending, Confirmed, Completed, Cancelled)
 - Advanced filtering and search
 - Date and time slot management
 - Customer and staff assignment
 
-### Service Management
+### 💼 Service Management
 - Service catalog with categories
 - Pricing and duration configuration
 - Active/Inactive toggle
 - Booking statistics per service
 
-### Staff Management
+### 👥 Staff Management
 - Staff profiles with contact information
 - Availability status (Available, Busy, Off)
 - Service assignments
 - Performance ratings and reviews
 - Weekly appointment tracking
 
-### Customer Management
+### 👤 Customer Management
 - Customer database with profiles
 - VIP/Regular/New customer segmentation
 - Visit history and spending tracking
 - Contact information management
 
-### Settings & Preferences
+### ⚙️ Settings & Preferences
 - Notification preferences (Email, SMS, Reminders)
 - Privacy controls
 - Password management
 - Theme customization (coming soon)
 - Account management
 
-### Authentication & Security
+### 🔐 Authentication & Security
 - Secure user registration and login
 - Email verification system
 - Password reset with token-based links
@@ -81,30 +81,47 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 ---
 
-## Screenshots
+## 📸 Screenshots
 
 <div align="center">
 
 ### Dashboard
+![Dashboard](docs/screenshots/Dashboard-1.png)
 *Comprehensive overview with charts, metrics, and quick actions*
 
+### Dashboard - Bottom Section
+![Dashboard Bottom](docs/screenshots/Dashboard-2.png)
+*Weekly activity, today's schedule, and recent activity feed*
+
 ### Appointments
+![Appointments](docs/screenshots/Appointment-page.png)
 *Manage and track all bookings with filtering and search*
 
 ### Services
+![Services](docs/screenshots/Services-page.png)
 *Service catalog with categories and pricing*
 
 ### Staff Management
+![Staff](docs/screenshots/Staff-page.png)
 *Team overview with availability and performance metrics*
 
 ### Settings
+![Settings](docs/screenshots/User-setting.png)
 *User preferences and account management*
+
+### Shop Setup
+![Shop Setup](docs/screenshots/Shop-Setup-1.png)
+*Business configuration and contact information*
+
+### Login
+![Login](docs/screenshots/Login-page.png)
+*Secure authentication with modern UI*
 
 </div>
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 ### Backend
 | Technology | Purpose |
@@ -132,7 +149,7 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 ---
 
-## Installation
+## 🚀 Installation
 
 ### Prerequisites
 - Python 3.11+
@@ -171,7 +188,7 @@ Visit `http://127.0.0.1:8000` to see the application.
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 AppointHub/
@@ -203,7 +220,7 @@ AppointHub/
 
 ---
 
-## Design System
+## 🎨 Design System
 
 ### Color Palette
 | Color | Hex | Usage |
@@ -222,7 +239,7 @@ AppointHub/
 
 ---
 
-## Configuration
+## 🔧 Configuration
 
 ### Environment Variables
 
@@ -244,7 +261,7 @@ REDIS_URL=redis://localhost:6379/0
 
 ---
 
-## Roadmap
+## 📈 Roadmap
 
 - [x] Dashboard with analytics
 - [x] Appointment management
@@ -262,7 +279,7 @@ REDIS_URL=redis://localhost:6379/0
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -274,13 +291,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Author
+## 👨‍💻 Author
 
 **Salvero**
 
