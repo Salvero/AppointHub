@@ -12,4 +12,5 @@ urlpatterns = [
     path('password-reset/', views.password_reset_request_view, name='password_reset_request'),
     path('password-reset/<str:token>/', views.password_reset_confirm_view, name='password_reset_confirm'),
     path('profile/', views.profile_view, name='profile'),
+    path('settings/', views.settings_view, name='settings'),
 ]

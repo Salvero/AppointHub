@@ -187,3 +187,58 @@ def profile_view(request):
         form = ProfileForm(instance=request.user)
 
     return render(request, 'accounts/profile.html', {'form': form})
+
+
+@login_required
+def settings_view(request):
+    """Display and update user settings."""
+    user = request.user
+    
+    if request.method == 'POST':
+        # Handle different settings sections
+        section = request.POST.get('section', 'notifications')
+        
+        if section == 'notifications':
+            user.email_notifications = request.POST.get('email_notifications') == 'on'
+            user.sms_notifications = request.POST.get('sms_notifications') == 'on'
+            user.booking_reminders = request.POST.get('booking_reminders') == 'on'
+            user.marketing_emails = request.POST.get('marketing_emails') == 'on'
+            user.save()
+            messages.success(request, 'Notification settings updated!')
+        
+        elif section == 'privacy':
+            user.profile_visible = request.POST.get('profile_visible') == 'on'
+            user.show_online_status = request.POST.get('show_online_status') == 'on'
+            user.save()
+            messages.success(request, 'Privacy settings updated!')
+        
+        elif section == 'password':
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+            
+            if not user.check_password(current_password):
+                messages.error(request, 'Current password is incorrect.')
+            elif new_password != confirm_password:
+                messages.error(request, 'New passwords do not match.')
+            elif len(new_password) < 8:
+                messages.error(request, 'Password must be at least 8 characters.')
+            else:
+                user.set_password(new_password)
+                user.save()
+                login(request, user)  # Re-login after password change
+                messages.success(request, 'Password changed successfully!')
+        
+        return redirect('accounts:settings')
+    
+    # Default settings values (in case fields don't exist on model yet)
+    context = {
+        'email_notifications': getattr(user, 'email_notifications', True),
+        'sms_notifications': getattr(user, 'sms_notifications', False),
+        'booking_reminders': getattr(user, 'booking_reminders', True),
+        'marketing_emails': getattr(user, 'marketing_emails', False),
+        'profile_visible': getattr(user, 'profile_visible', True),
+        'show_online_status': getattr(user, 'show_online_status', True),
+    }
+    
+    return render(request, 'accounts/settings.html', context)
