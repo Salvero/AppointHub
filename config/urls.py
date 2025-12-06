@@ -14,7 +14,7 @@ urlpatterns = [
     path('staff/', include('apps.staff.urls')),
     path('bookings/', include('apps.bookings.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
-    path('', include('apps.dashboard.urls')),  # Root URL goes to dashboard
+    path('', include(('apps.dashboard.urls', 'home'), namespace='home')),  # Root URL
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ shop.name }} - AppointHub{% endblock %}
+
+{% block content %}
+<!-- Shop Header -->
+<div class="bg-white shadow-sm rounded-lg overflow-hidden mb-8">
+    {% if shop.cover_image %}
+    <div class="h-48 bg-cover bg-center" style="background-image: url('{{ shop.cover_image.url }}');"></div>
+    {% else %}
+    <div class="h-48 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+    {% endif %}
+
+    <div class="p-6 -mt-16 relative">
+        <div class="flex items-end space-x-4">
+            {% if shop.logo %}
+            <img src="{{ shop.logo.url }}" alt="{{ shop.name }}" class="w-24 h-24 rounded-lg border-4 border-white shadow-lg object-cover">
+            {% else %}
+            <div class="w-24 h-24 rounded-lg border-4 border-white shadow-lg bg-indigo-600 flex items-center justify-center">
+                <span class="text-3xl font-bold text-white">{{ shop.name|slice:":1" }}</span>
+            </div>
+            {% endif %}
+
+            <div class="flex-1 pt-16">
+                <h1 class="text-3xl font-bold text-gray-800">{{ shop.name }}</h1>
+                <p class="text-gray-600">{{ shop.full_address }}</p>
+            </div>
+
+            <a href="{% url 'bookings:create' shop.slug %}"
+               class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 font-medium">
+                Book Now
+            </a>
+        </div>
+
+        {% if shop.description %}
+        <p class="mt-4 text-gray-600">{{ shop.description }}</p>
+        {% endif %}
+
+        <div class="mt-4 flex space-x-6 text-sm text-gray-600">
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
+                {{ shop.phone }}
+            </div>
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                {{ shop.email }}
+            </div>
+            {% if shop.website %}
+            <a href="{{ shop.website }}" target="_blank" class="flex items-center text-indigo-600 hover:text-indigo-800">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
+                Website
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Services -->
+    <div class="lg:col-span-2">
+        <div class="bg-white shadow-sm rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Services</h2>
+
+            {% if services %}
+            <div class="space-y-4">
+                {% regroup services by category as category_list %}
+                {% for category in category_list %}
+                {% if category.grouper %}
+                <h3 class="font-semibold text-gray-700 mt-6 mb-2">{{ category.grouper.name }}</h3>
+                {% endif %}
+
+                {% for service in category.list %}
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
+                    <div>
+                        <div class="font-medium text-gray-800">{{ service.name }}</div>
+                        {% if service.description %}
+                        <div class="text-sm text-gray-500">{{ service.description }}</div>
+                        {% endif %}
+                        <div class="text-sm text-gray-500 mt-1">{{ service.formatted_duration }}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold text-gray-800">{{ service.formatted_price }}</div>
+                        <a href="{% url 'bookings:create' shop.slug %}?service={{ service.id }}"
+                           class="text-sm text-indigo-600 hover:text-indigo-800">Book</a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 text-center py-8">No services available</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+        <!-- Business Hours -->
+        <div class="bg-white shadow-sm rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Business Hours</h2>
+
+            <div class="space-y-2">
+                {% for hour in hours %}
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">{{ hour.get_day_of_week_display }}</span>
+                    <span class="{% if hour.is_closed %}text-red-500{% else %}text-gray-800{% endif %}">
+                        {% if hour.is_closed %}
+                        Closed
+                        {% else %}
+                        {{ hour.open_time|time:"g:i A" }} - {{ hour.close_time|time:"g:i A" }}
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Staff -->
+        {% if staff %}
+        <div class="bg-white shadow-sm rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Our Team</h2>
+
+            <div class="space-y-4">
+                {% for member in staff %}
+                <div class="flex items-center space-x-3">
+                    {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.display_name }}"
+                         class="w-12 h-12 rounded-full object-cover">
+                    {% else %}
+                    <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                        <span class="text-gray-500 font-medium">{{ member.display_name|slice:":1" }}</span>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <div class="font-medium text-gray-800">{{ member.display_name }}</div>
+                        {% if member.job_title %}
+                        <div class="text-sm text-gray-500">{{ member.job_title }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
