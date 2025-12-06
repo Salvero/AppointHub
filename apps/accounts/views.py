@@ -34,21 +34,41 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
 
-            # Create verification token
-            token = secrets.token_urlsafe(32)
-            EmailVerificationToken.objects.create(
-                user=user,
-                token=token,
-                expires_at=timezone.now() + timedelta(hours=24),
-            )
+            # Try to send verification email, but don't fail if email service is not configured
+            try:
+                # Create verification token
+                token = secrets.token_urlsafe(32)
+                EmailVerificationToken.objects.create(
+                    user=user,
+                    token=token,
+                    expires_at=timezone.now() + timedelta(hours=24),
+                )
 
-            # Send verification email via Resend
-            email_service.send_verification_email(user, token, request)
-
-            messages.success(
-                request,
-                'Registration successful! Please check your email to verify your account.'
-            )
+                # Send verification email via Resend
+                email_sent = email_service.send_verification_email(user, token, request)
+                
+                if email_sent:
+                    messages.success(
+                        request,
+                        'Registration successful! Please check your email to verify your account.'
+                    )
+                else:
+                    # Email not sent (no API key), auto-verify user
+                    user.is_email_verified = True
+                    user.save()
+                    messages.success(
+                        request,
+                        'Registration successful! You can now log in.'
+                    )
+            except Exception as e:
+                # If email fails, still allow registration but auto-verify
+                user.is_email_verified = True
+                user.save()
+                messages.success(
+                    request,
+                    'Registration successful! You can now log in.'
+                )
+            
             return redirect('accounts:login')
     else:
         form = RegistrationForm()
