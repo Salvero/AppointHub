@@ -21,8 +21,6 @@ from apps.notifications.services import email_service
 
 def landing_view(request):
     """Landing page view."""
-    if request.user.is_authenticated:
-        return redirect('dashboard:index')
     return render(request, 'landing.html')
 
 
