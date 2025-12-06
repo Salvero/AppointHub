@@ -269,13 +269,6 @@ REDIS_URL=redis://localhost:6379/0
 - [x] Staff management
 - [x] Customer database
 - [x] User settings
-- [ ] Calendar integration
-- [ ] Online booking portal
-- [ ] Payment processing
-- [ ] SMS notifications
-- [ ] Mobile app (React Native)
-- [ ] Multi-location support
-- [ ] Reporting & exports
 
 ---
 
