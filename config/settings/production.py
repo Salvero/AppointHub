@@ -10,6 +10,12 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '.onrender.com').split(',')
 
+# CSRF trusted origins (required for Django 4.0+ with HTTPS)
+CSRF_TRUSTED_ORIGINS = [
+    'https://appointhub.onrender.com',
+    'https://*.onrender.com',
+]
+
 # Render provides DATABASE_URL
 DATABASES = {
     'default': dj_database_url.config(
