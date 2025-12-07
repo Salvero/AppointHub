@@ -56,16 +56,18 @@ def register_view(request):
                         'Registration successful! Please check your email to verify your account.'
                     )
                 else:
-                    # Email not sent (no API key), auto-verify user
+                    # Email not sent (no API key), auto-verify and activate user
                     user.is_email_verified = True
+                    user.is_active = True
                     user.save()
                     messages.success(
                         request,
                         'Registration successful! You can now log in.'
                     )
             except Exception as e:
-                # If email fails, still allow registration but auto-verify
+                # If email fails, still allow registration but auto-verify and activate
                 user.is_email_verified = True
+                user.is_active = True
                 user.save()
                 messages.success(
                     request,
