@@ -86,7 +86,7 @@
                 </div>
 
                 <div>
-                    <label for="id_password1" class="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label for="id_password" class="block text-sm font-medium text-gray-700 mb-1.5">
                         Password
                     </label>
                     <div class="relative">
@@ -97,20 +97,20 @@
                         </div>
                         <input
                             type="password"
-                            name="password1"
-                            id="id_password1"
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all {% if form.password1.errors %}border-red-500{% endif %}"
+                            name="password"
+                            id="id_password"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all {% if form.password.errors %}border-red-500{% endif %}"
                             placeholder="••••••••"
                             required
                         >
                     </div>
-                    {% if form.password1.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.password1.errors.0 }}</p>
+                    {% if form.password.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.password.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <div>
-                    <label for="id_password2" class="block text-sm font-medium text-gray-700 mb-1.5">
+                    <label for="id_password_confirm" class="block text-sm font-medium text-gray-700 mb-1.5">
                         Confirm Password
                     </label>
                     <div class="relative">
@@ -121,15 +121,15 @@
                         </div>
                         <input
                             type="password"
-                            name="password2"
-                            id="id_password2"
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all {% if form.password2.errors %}border-red-500{% endif %}"
+                            name="password_confirm"
+                            id="id_password_confirm"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all {% if form.password_confirm.errors %}border-red-500{% endif %}"
                             placeholder="••••••••"
                             required
                         >
                     </div>
-                    {% if form.password2.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.password2.errors.0 }}</p>
+                    {% if form.password_confirm.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.password_confirm.errors.0 }}</p>
                     {% endif %}
                 </div>
 
