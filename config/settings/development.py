@@ -30,10 +30,14 @@ else:
         }
     }
 
-# Debug toolbar
-INSTALLED_APPS += ['debug_toolbar']
-MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
-INTERNAL_IPS = ['127.0.0.1']
+# Debug toolbar (only if installed)
+try:
+    import debug_toolbar
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    INTERNAL_IPS = ['127.0.0.1']
+except ImportError:
+    pass
 
 # Email - use console backend for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
