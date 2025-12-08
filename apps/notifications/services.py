@@ -54,6 +54,30 @@ class EmailService:
             html_content=html_content,
         )
 
+    def send_account_exists_email(self, email, request=None):
+        """Send email notifying user that account already exists (for failed registration)."""
+        login_url = reverse('accounts:login')
+        reset_url = reverse('accounts:password_reset_request')
+
+        if request:
+            login_url = request.build_absolute_uri(login_url)
+            reset_url = request.build_absolute_uri(reset_url)
+        else:
+            login_url = f'{settings.SITE_URL}{login_url}'
+            reset_url = f'{settings.SITE_URL}{reset_url}'
+
+        html_content = render_to_string('emails/account_exists.html', {
+            'email': email,
+            'login_url': login_url,
+            'reset_url': reset_url,
+        })
+
+        return self.send_email(
+            to_email=email,
+            subject='AppointHub Registration Attempt',
+            html_content=html_content,
+        )
+
     def send_password_reset_email(self, user, token, request=None):
         """Send password reset link to user."""
         reset_url = reverse('accounts:password_reset_confirm', kwargs={'token': token})
