@@ -13,7 +13,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me-in-production')
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError('SECRET_KEY environment variable is required. Generate one with: python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"')
 
 # Application definition
 DJANGO_APPS = [
@@ -29,6 +31,7 @@ THIRD_PARTY_APPS = [
     'crispy_forms',
     'crispy_tailwind',
     'django_celery_beat',
+    'axes',
 ]
 
 LOCAL_APPS = [
@@ -51,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -107,6 +111,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# File upload limits (security)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB max for form data
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB max for file uploads
+DATA_UPLOAD_MAX_NUMBER_FILES = 10  # Max 10 files per request
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -138,3 +147,18 @@ CELERY_TIMEZONE = TIME_ZONE
 # Session settings
 SESSION_COOKIE_AGE = 86400 * 7  # 1 week
 SESSION_COOKIE_HTTPONLY = True
+
+# Authentication backends (required for django-axes)
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Django Axes - Brute force protection
+AXES_FAILURE_LIMIT = 3  # Lock after 3 failed attempts
+AXES_COOLOFF_TIME = 120  # Lock for 5 days (in hours)
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_RESET_ON_SUCCESS = True  # Reset failed attempts on successful login
+AXES_LOCKOUT_PARAMETERS = ['ip_address', 'username']  # Lock by IP and username combo
+AXES_ENABLE_ACCESS_FAILURE_LOG = True  # Log failed attempts
+AXES_LOCKOUT_TEMPLATE = 'accounts/lockout.html'  # Custom lockout page
