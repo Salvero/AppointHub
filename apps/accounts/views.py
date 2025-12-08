@@ -6,8 +6,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
+from django_ratelimit.decorators import ratelimit
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +31,7 @@ def landing_view(request):
     return render(request, 'landing.html')
 
 
+@ratelimit(key='ip', rate='10/h', method='POST', block=True)
 def register_view(request):
     """Handle user registration."""
     if request.user.is_authenticated:
@@ -35,45 +40,48 @@ def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            email = form.cleaned_data['email']
 
-            # Try to send verification email, but don't fail if email service is not configured
-            try:
-                # Create verification token
-                token = secrets.token_urlsafe(32)
-                EmailVerificationToken.objects.create(
-                    user=user,
-                    token=token,
-                    expires_at=timezone.now() + timedelta(hours=24),
-                )
+            # Check if user already exists (don't reveal this to the user)
+            existing_user = User.objects.filter(email=email).first()
 
-                # Send verification email via Resend
-                email_sent = email_service.send_verification_email(user, token, request)
-                
-                if email_sent:
-                    messages.success(
-                        request,
-                        'Registration successful! Please check your email to verify your account.'
+            if existing_user:
+                # Send "account exists" email instead of revealing the error
+                try:
+                    email_service.send_account_exists_email(email, request)
+                except Exception:
+                    pass  # Silently fail - don't reveal anything
+            else:
+                # Create new user
+                user = form.save()
+
+                # Try to send verification email
+                try:
+                    token = secrets.token_urlsafe(32)
+                    EmailVerificationToken.objects.create(
+                        user=user,
+                        token=token,
+                        expires_at=timezone.now() + timedelta(hours=24),
                     )
-                else:
-                    # Email not sent (no API key), auto-verify and activate user
+
+                    email_sent = email_service.send_verification_email(user, token, request)
+
+                    if not email_sent:
+                        # Email not sent (no API key), auto-verify and activate user
+                        user.is_email_verified = True
+                        user.is_active = True
+                        user.save()
+                except Exception:
+                    # If email fails, auto-verify and activate
                     user.is_email_verified = True
                     user.is_active = True
                     user.save()
-                    messages.success(
-                        request,
-                        'Registration successful! You can now log in.'
-                    )
-            except Exception as e:
-                # If email fails, still allow registration but auto-verify and activate
-                user.is_email_verified = True
-                user.is_active = True
-                user.save()
-                messages.success(
-                    request,
-                    'Registration successful! You can now log in.'
-                )
-            
+
+            # Always show the same message (don't reveal if account exists)
+            messages.success(
+                request,
+                'Registration successful! Please check your email to verify your account.'
+            )
             return redirect('accounts:login')
     else:
         form = RegistrationForm()
@@ -91,11 +99,18 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+
+            # Handle "Remember Me" checkbox
+            if not request.POST.get('remember'):
+                # Session expires when browser closes
+                request.session.set_expiry(0)
+            # Otherwise use default SESSION_COOKIE_AGE (7 days)
+
             messages.success(request, f'Welcome back, {user.get_short_name()}!')
 
-            # Redirect to next page if specified
+            # Redirect to next page if specified and safe
             next_url = request.GET.get('next')
-            if next_url:
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
                 return redirect(next_url)
             return redirect('dashboard:index')
     else:
@@ -138,6 +153,7 @@ def verify_email_view(request, token):
     return redirect('accounts:login')
 
 
+@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def password_reset_request_view(request):
     """Handle password reset request."""
     if request.user.is_authenticated:
@@ -246,18 +262,21 @@ def settings_view(request):
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('new_password')
             confirm_password = request.POST.get('confirm_password')
-            
+
             if not user.check_password(current_password):
                 messages.error(request, 'Current password is incorrect.')
             elif new_password != confirm_password:
                 messages.error(request, 'New passwords do not match.')
-            elif len(new_password) < 8:
-                messages.error(request, 'Password must be at least 8 characters.')
             else:
-                user.set_password(new_password)
-                user.save()
-                login(request, user)  # Re-login after password change
-                messages.success(request, 'Password changed successfully!')
+                try:
+                    validate_password(new_password, user)
+                    user.set_password(new_password)
+                    user.save()
+                    login(request, user)  # Re-login after password change
+                    messages.success(request, 'Password changed successfully!')
+                except ValidationError as e:
+                    for error in e.messages:
+                        messages.error(request, error)
         
         return redirect('accounts:settings')
     

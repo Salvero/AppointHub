@@ -28,8 +28,7 @@ class RegistrationForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email').lower()
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('A user with this email already exists.')
+        # Don't reveal whether email exists - handle in view
         return email
 
     def clean(self):
