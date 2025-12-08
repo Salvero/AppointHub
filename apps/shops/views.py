@@ -36,9 +36,8 @@ def shop_setup_view(request):
                     is_closed=is_weekend,
                 )
 
-            # Update user role to admin
-            request.user.role = 'admin'
-            request.user.save()
+            # Note: Shop owner permissions are determined by shop.owner relationship,
+            # not by elevating user role. This prevents privilege escalation.
 
             messages.success(request, 'Your shop has been created successfully!')
             return redirect('shops:dashboard', slug=shop.slug)

@@ -6,6 +6,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django_ratelimit.decorators import ratelimit
 
 from apps.services.models import Service
 from apps.shops.models import Shop
@@ -153,6 +154,9 @@ def booking_confirm_view(request, slug, service_pk):
             price=service.price,
         )
 
+        # Store booking ID in session to allow access to success page
+        request.session['recent_booking_id'] = booking.pk
+
         messages.success(request, 'Your booking has been confirmed!')
         return redirect('bookings:success', slug=slug, pk=booking.pk)
 
@@ -170,6 +174,26 @@ def booking_success_view(request, slug, pk):
     """Booking confirmation/success page."""
     shop = get_object_or_404(Shop, slug=slug)
     booking = get_object_or_404(Booking, pk=pk, shop=shop)
+
+    # Authorization check - prevent IDOR
+    is_authorized = False
+
+    # Check 1: Just created this booking (stored in session)
+    if request.session.get('recent_booking_id') == booking.pk:
+        is_authorized = True
+        # Clear from session after viewing
+        del request.session['recent_booking_id']
+
+    # Check 2: Authenticated user is the customer
+    elif request.user.is_authenticated and booking.customer == request.user:
+        is_authorized = True
+
+    # Check 3: Authenticated user is the shop owner
+    elif request.user.is_authenticated and shop.owner == request.user:
+        is_authorized = True
+
+    if not is_authorized:
+        raise Http404("Booking not found")
 
     return render(request, 'bookings/success.html', {
         'shop': shop,
@@ -352,6 +376,7 @@ def my_booking_cancel_view(request, pk):
 # HTMX / API Views
 # ============================================
 
+@ratelimit(key='ip', rate='60/m', block=True)
 def slots_api_view(request, slug):
     """API endpoint to get available slots for a date (used with HTMX)."""
     shop = get_object_or_404(Shop, slug=slug, is_active=True)
