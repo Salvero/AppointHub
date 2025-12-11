@@ -2,14 +2,17 @@
 
 <div align="center">
 
-**A modern, full-featured appointment booking and business management platform built with Django**
+**A high-performance, production-ready appointment booking platform built with Modern Django**
 
 [![Python](https://img.shields.io/badge/Python-3.13-blue?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-5.2-green?style=flat-square&logo=django&logoColor=white)](https://djangoproject.com)
+[![HTMX](https://img.shields.io/badge/HTMX-2.x-3366CC?style=flat-square&logo=htmx&logoColor=white)](https://htmx.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-[Live Demo](#) • [Features](#features) • [Screenshots](#screenshots) • [Installation](#installation) • [Tech Stack](#tech-stack)
+[Live Demo](https://appointhub.onrender.com/) • [Features](#features) • [Screenshots](https://github.com/Salvero/AppointHub?tab=readme-ov-file#-screenshots)
 
 </div>
 
@@ -17,13 +20,14 @@
 
 ## 🎯 Overview
 
-AppointHub is a comprehensive appointment scheduling and business management solution designed for service-based businesses like salons, spas, clinics, and consulting firms. Built with scalability and user experience in mind, it provides an intuitive interface for managing appointments, staff, services, and customer relationships.
+AppointHub is a comprehensive appointment scheduling and business management solution designed for service-based businesses like salons, spas, clinics, and consulting firms. Built with **Modern Django architecture**, it leverages **HTMX** for dynamic interactivity and **Alpine.js** for lightweight frontend logic—delivering **SPA-like speed without the complexity** of a JavaScript framework.
 
 ### Why AppointHub?
 
-- **Production-Ready** - Built with industry best practices and clean architecture
+- **Production-Ready** - Built with industry best practices, clean architecture, and scalable infrastructure
+- **Modern Django Stack** - Django 5.2 + HTMX + Alpine.js for seamless, reactive user experiences
+- **SPA-like Performance** - Dynamic page updates without full reloads, zero JavaScript framework overhead
 - **Responsive Design** - Beautiful UI that works seamlessly on all devices
-- **Real-time Updates** - Dynamic interactions with HTMX and Alpine.js
 - **Secure** - Token-based authentication, password hashing, and CSRF protection
 - **Analytics Dashboard** - Visual insights into business performance
 
@@ -153,25 +157,25 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 | Technology | Purpose |
 |------------|---------|
 | **Python 3.13** | Core programming language |
-| **Django 5.2** | Web framework |
-| **SQLite / PostgreSQL** | Database (dev/prod) |
-| **Celery** | Async task queue |
-| **Redis** | Caching & message broker |
+| **Django 5.2** | High-performance web framework with batteries included |
+| **PostgreSQL** | Production-grade relational database (SQLite for development) |
+| **Celery** | Asynchronous task queue for background jobs (email notifications, scheduled tasks) |
+| **Redis** | High-performance caching layer and message broker for Celery task distribution |
 
 ### Frontend
 | Technology | Purpose |
 |------------|---------|
-| **Tailwind CSS** | Utility-first styling |
-| **Alpine.js** | Lightweight reactivity |
-| **HTMX** | Dynamic HTML updates |
-| **Chart.js** | Data visualization |
+| **HTMX** | Dynamic HTML updates with SPA-like interactivity—no JavaScript framework required |
+| **Alpine.js** | Lightweight reactivity for UI state management and DOM manipulation |
+| **Tailwind CSS** | Utility-first CSS framework for rapid, consistent styling |
+| **Chart.js** | Interactive data visualization for analytics dashboards |
 
-### DevOps & Tools
+### Infrastructure & DevOps
 | Technology | Purpose |
 |------------|---------|
-| **Docker** | Containerization |
-| **Git** | Version control |
-| **Resend** | Transactional emails |
+| **Docker** | Containerization for consistent development and production environments |
+| **Git** | Version control and collaborative development |
+| **Resend** | Reliable transactional email delivery service |
 
 ---
 
@@ -300,6 +304,25 @@ REDIS_URL=redis://localhost:6379/0
 
 ---
 
+## 🧪 Testing & Quality Assurance
+
+AppointHub uses Django's built-in testing framework to ensure system reliability and maintain code quality across all modules.
+
+```bash
+# Run the full test suite
+python manage.py test
+
+# Run tests for a specific app
+python manage.py test apps.bookings
+
+# Run tests with verbosity
+python manage.py test --verbosity=2
+```
+
+The project follows standard Django testing conventions with unit tests for models, views, and forms to ensure consistent behavior across releases.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -330,6 +353,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ⭐ Star this repo if you find it helpful!
 
-Built with Django & Tailwind CSS
+Built with **Django 5.2** • **HTMX** • **Alpine.js** • **Tailwind CSS**
 
 </div>
